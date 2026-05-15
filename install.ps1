@@ -36,10 +36,6 @@ function Show-Banner {
     Write-Host "    ║                                                              ║" -ForegroundColor $D
     Write-Host "    ╚══════════════════════════════════════════════════════════════╝" -ForegroundColor $D
     Write-Host ""
-    Write-Host "                    ╭─────────────────────────────────────────╮" -ForegroundColor $D
-    Write-Host "                    │    超星考试辅助工具 · Exam Helper       │" -ForegroundColor $Y
-    Write-Host "                    ╰─────────────────────────────────────────╯" -ForegroundColor $D
-    Write-Host ""
 }
 
 # ── Utility functions ──────────────────────────────────────────────────────────
@@ -65,8 +61,11 @@ function Write-Warn {
 # ── Check prerequisites ────────────────────────────────────────────────────────
 
 Write-Host ""
-Write-Host "  EEEYER Installer" -ForegroundColor Yellow
-Write-Host "  ================" -ForegroundColor DarkYellow
+Write-Host "  EEEYER Installer" -NoNewline -ForegroundColor Yellow
+Write-Host "                     ╭─────────────────────────────────────────╮" -ForegroundColor DarkYellow
+Write-Host "  ================" -NoNewline -ForegroundColor DarkYellow
+Write-Host "                     │    超星考试辅助工具 · Exam Helper       │" -ForegroundColor Yellow
+Write-Host "                       ╰─────────────────────────────────────────╯" -ForegroundColor DarkYellow
 Write-Host ""
 
 $pythonCmd = $null
