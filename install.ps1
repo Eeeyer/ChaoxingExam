@@ -13,18 +13,16 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$REPO_URL = "https://github.com/Eeeyer/ChaoxingExam.git"
 $REPO_ARCHIVE = "https://github.com/Eeeyer/ChaoxingExam/archive/refs/heads/$Branch.zip"
 $INSTALL_DIR = "$env:USERPROFILE\.eeeeyr"
 $VENV_DIR = "$INSTALL_DIR\venv"
 $EEEYER_BIN = "$INSTALL_DIR\er.bat"
 
-# ── Banner (PowerShell native, no Python required) ──────────────────────────
+# ── Banner ────────────────────────────────────────────────────────────────────
 
 function Show-Banner {
     $Y = [ConsoleColor]::Yellow
     $D = [ConsoleColor]::DarkYellow
-    $W = [ConsoleColor]::White
 
     Write-Host ""
     Write-Host "    ╔══════════════════════════════════════════════════════════════╗" -ForegroundColor $D
@@ -44,11 +42,11 @@ function Show-Banner {
     Write-Host ""
 }
 
-# ── Utility functions ────────────────────────────────────────────────────────
+# ── Utility functions ──────────────────────────────────────────────────────────
 
 function Write-Step {
     param([string]$Message)
-    Write-Host "  [$([char]0x2714)] " -NoNewline -ForegroundColor Green
+    Write-Host "  [✔] " -NoNewline -ForegroundColor Green
     Write-Host $Message -ForegroundColor White
 }
 
@@ -64,20 +62,13 @@ function Write-Warn {
     Write-Host $Message -ForegroundColor Yellow
 }
 
-# ── Check prerequisites ──────────────────────────────────────────────────────
-
-function Test-IsAdmin {
-    $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $principal = New-Object Security.Principal.WindowsPrincipal($identity)
-    return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-}
+# ── Check prerequisites ────────────────────────────────────────────────────────
 
 Write-Host ""
 Write-Host "  EEEYER Installer" -ForegroundColor Yellow
 Write-Host "  ================" -ForegroundColor DarkYellow
 Write-Host ""
 
-# Check Python
 $pythonCmd = $null
 try {
     $pyVersion = python --version 2>&1
@@ -105,66 +96,57 @@ if (-not $pythonCmd) {
 $pyVersionStr = & $pythonCmd --version 2>&1
 Write-Step "检测到 $pyVersionStr"
 
-# Check pip
 try {
-    $pipVersion = & $pythonCmd -m pip --version 2>&1
+    $null = & $pythonCmd -m pip --version 2>&1
     Write-Step "pip 可用"
 } catch {
     Write-Warn "pip 未安装，正在尝试安装..."
     & $pythonCmd -m ensurepip --upgrade 2>&1
 }
 
-# ── Install EEEYER ────────────────────────────────────────────────────────────
+# ── Install EEEYER ──────────────────────────────────────────────────────────
 
 Write-Info "安装目录: $INSTALL_DIR"
 
-# Create install directory
 if (-not (Test-Path $INSTALL_DIR)) {
     New-Item -ItemType Directory -Path $INSTALL_DIR -Force | Out-Null
 }
 
 if ($DevMode) {
-    # 本地开发模式：直接从当前目录复制
     $srcPath = $PSScriptRoot
     if (-not $srcPath) { $srcPath = (Get-Location).Path }
     Write-Info "开发模式: 从本地复制 $srcPath ..."
 } else {
-    # 生产模式：从 GitHub 下载
-    $zipFile = "$env:TEMP\eeeeyr-$Branch.zip"
+    $zipFile = "$env:TEMP\eeeeyr.zip"
     $extractDir = "$env:TEMP\eeeeyr-extract"
 
     Write-Info "正在下载 EEEYER..."
 
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        Invoke-WebRequest -Uri $REPO_ARCHIVE -OutFile $zipFile -UseBasicParsing
-        Write-Step "下载完成"
+        (New-Object System.Net.WebClient).DownloadFile($REPO_ARCHIVE, $zipFile)
     } catch {
-        Write-Host "  [X] 下载失败: $_" -ForegroundColor Red
-        Write-Host "  请检查网络连接后重试。" -ForegroundColor Gray
+        Write-Host "  [X] 下载失败，请检查网络连接后重试。" -ForegroundColor Red
         exit 1
     }
+    Write-Step "下载完成"
 
-    # Extract
     if (Test-Path $extractDir) {
         Remove-Item -Recurse -Force $extractDir
     }
     Expand-Archive -Path $zipFile -DestinationPath $extractDir -Force
     Write-Step "解压完成"
 
-    # Find the extracted folder (GitHub adds branch name suffix)
     $srcDir = Get-ChildItem -Path $extractDir -Directory | Select-Object -First 1
     $srcPath = $srcDir.FullName
 }
 
-# Copy files to install dir
 Write-Info "正在安装到 $INSTALL_DIR ..."
 robocopy "$srcPath" "$INSTALL_DIR" /E /NFL /NDL /NJH /NJS /nc /ns /np 2>&1 | Out-Null
 Write-Step "文件复制完成"
 
-# Create virtual environment and install
 Write-Info "正在创建虚拟环境..."
-& $pythonCmd -m venv "$VENV_DIR" *>&1 | Out-Null
+& $pythonCmd -m venv "$VENV_DIR" 2>&1 | Out-Null
 Write-Step "虚拟环境已创建"
 
 Write-Info "正在安装依赖..."
@@ -173,14 +155,14 @@ if (Test-Path "$INSTALL_DIR\requirements.txt") {
     cmd /c "`"$pipExe`" install -r `"$INSTALL_DIR\requirements.txt`" --quiet >nul 2>&1"
     if ($LASTEXITCODE -ne 0) {
         Write-Warn "pip 失败，正在重试..."
-        & $pythonCmd -m pip install -r "$INSTALL_DIR\requirements.txt" --quiet
+        & $pythonCmd -m pip install -r "$INSTALL_DIR\requirements.txt" --quiet 2>&1 | Out-Null
     }
 } else {
     cmd /c "`"$pipExe`" install requests rich --quiet >nul 2>&1"
 }
 Write-Step "依赖安装完成"
 
-# ── Create wrapper batch script ──────────────────────────────────────────────
+# ── Create wrapper ──────────────────────────────────────────────────────────
 
 $wrapperContent = @"
 @echo off
@@ -201,14 +183,14 @@ if ($userPath -notlike "*$INSTALL_DIR*") {
         "$userPath;$INSTALL_DIR",
         "User"
     )
-    # Update current session PATH too
     $env:Path = "$env:Path;$INSTALL_DIR"
     Write-Step "已添加到 PATH"
 } else {
     Write-Info "PATH 中已存在 EEEYER"
 }
 
-# Cleanup temp files (skip in dev mode)
+# ── Cleanup ──────────────────────────────────────────────────────────────────
+
 if (-not $DevMode) {
     Remove-Item -Force $zipFile -ErrorAction SilentlyContinue
     Remove-Item -Recurse -Force $extractDir -ErrorAction SilentlyContinue
