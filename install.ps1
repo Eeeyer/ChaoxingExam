@@ -161,6 +161,14 @@ if (Test-Path "$INSTALL_DIR\requirements.txt") {
 }
 Write-Step "依赖安装完成"
 
+Write-Info "正在安装 EEEYER..."
+cmd /c "`"$pipExe`" install -e `"$INSTALL_DIR`" --quiet >nul 2>&1"
+if ($LASTEXITCODE -ne 0) {
+    Write-Warn "安装 EEEYER 失败，正在重试..."
+    & $pythonCmd -m pip install -e "$INSTALL_DIR" --quiet 2>&1 | Out-Null
+}
+Write-Step "EEEYER 安装完成"
+
 # ── Create wrapper ──────────────────────────────────────────────────────────
 
 $wrapperContent = @"
