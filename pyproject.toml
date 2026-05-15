@@ -13,7 +13,7 @@ dependencies = [
 ]
 
 [project.scripts]
-eeeeyr = "eeeeyr.cli:main"
+er = "eeeeyr.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]

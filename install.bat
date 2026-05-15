@@ -40,9 +40,9 @@ REM Create wrapper
 echo @echo off
 echo chcp 65001 ^>nul 2^>^&1
 echo call "%INSTALL_DIR%\venv\Scripts\python.exe" -m eeeeyr %%*
-) > "%INSTALL_DIR%\eeeeyr.bat"
+) > "%INSTALL_DIR%\er.bat"
 
-echo   [+] Wrapper created: %INSTALL_DIR%\eeeeyr.bat
+echo   [+] Wrapper created: %INSTALL_DIR%\er.bat
 
 REM Add to PATH
 set "userPath="
@@ -66,5 +66,5 @@ rmdir /s /q "%TEMP%\eeeeyr-extract" 2>nul
 
 echo.
 echo   EEEYER installed!
-echo   Restart your terminal and run: eeeeyr
+echo   Restart your terminal and run: er
 echo.

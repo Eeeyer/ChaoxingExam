@@ -17,7 +17,7 @@ $REPO_URL = "https://github.com/Eeeyer/ChaoxingExam.git"
 $REPO_ARCHIVE = "https://github.com/Eeeyer/ChaoxingExam/archive/refs/heads/$Branch.zip"
 $INSTALL_DIR = "$env:USERPROFILE\.eeeeyr"
 $VENV_DIR = "$INSTALL_DIR\venv"
-$EEEYER_BIN = "$INSTALL_DIR\eeeeyr.bat"
+$EEEYER_BIN = "$INSTALL_DIR\er.bat"
 
 # ── Banner (PowerShell native, no Python required) ──────────────────────────
 
@@ -223,14 +223,14 @@ if (-not $NoBanner) {
 Write-Host "  EEEYER 安装完成!" -ForegroundColor Green
 Write-Host ""
 Write-Host "  使用方法:" -ForegroundColor White
-Write-Host "    eeeeyr              " -NoNewline -ForegroundColor Yellow
+Write-Host "    er              " -NoNewline -ForegroundColor Yellow
 Write-Host "显示完整界面" -ForegroundColor Gray
-Write-Host "    eeeeyr login        " -NoNewline -ForegroundColor Yellow
+Write-Host "    er login        " -NoNewline -ForegroundColor Yellow
 Write-Host "登录超星账号" -ForegroundColor Gray
-Write-Host "    eeeeyr exam list    " -NoNewline -ForegroundColor Yellow
+Write-Host "    er exam list    " -NoNewline -ForegroundColor Yellow
 Write-Host "查看可用考试" -ForegroundColor Gray
-Write-Host "    eeeeyr search <关键词>" -NoNewline -ForegroundColor Yellow
+Write-Host "    er search <关键词>" -NoNewline -ForegroundColor Yellow
 Write-Host "搜索题库" -ForegroundColor Gray
 Write-Host ""
-Write-Host "  提示: 重新打开终端窗口即可直接使用 'eeeeyr' 命令" -ForegroundColor DarkGray
+Write-Host "  提示: 重新打开终端窗口即可直接使用 'er' 命令" -ForegroundColor DarkGray
 Write-Host ""

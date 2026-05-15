@@ -20,7 +20,7 @@ def _setup_encoding():
 def main():
     _setup_encoding()
     parser = argparse.ArgumentParser(
-        prog="eeeeyr",
+        prog="er",
         description="EEEYER - 超星考试辅助终端工具",
     )
     parser.add_argument(
@@ -67,7 +67,7 @@ def main():
     # 默认情况显示横幅并进入交互
     if args.command is None:
         show()
-        print("用法: eeeeyr <command> [options]")
+        print("用法: er <command> [options]")
         print()
         print("可用命令:")
         print("  login    登录超星账号")
@@ -75,7 +75,7 @@ def main():
         print("  search   搜索题库")
         print("  config   查看/修改配置")
         print()
-        print('使用 "eeeeyr <command> --help" 查看各命令的详细帮助。')
+        print('使用 "er <command> --help" 查看各命令的详细帮助。')
         return
 
     # 处理子命令
