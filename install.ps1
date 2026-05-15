@@ -62,10 +62,10 @@ function Write-Warn {
 
 Write-Host ""
 Write-Host "  EEEYER Installer" -NoNewline -ForegroundColor Yellow
-Write-Host "                     ╭─────────────────────────────────────────╮" -ForegroundColor DarkYellow
+Write-Host "            ╭─────────────────────────────────────────╮" -ForegroundColor DarkYellow
 Write-Host "  ================" -NoNewline -ForegroundColor DarkYellow
-Write-Host "                     │    超星考试辅助工具 · Exam Helper       │" -ForegroundColor Yellow
-Write-Host "                       ╰─────────────────────────────────────────╯" -ForegroundColor DarkYellow
+Write-Host "            │    超星考试辅助工具 · Exam Helper       │" -ForegroundColor Yellow
+Write-Host "            ╰─────────────────────────────────────────╯" -ForegroundColor DarkYellow
 Write-Host ""
 
 $pythonCmd = $null
