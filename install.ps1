@@ -169,18 +169,15 @@ Write-Step "虚拟环境已创建"
 
 Write-Info "正在安装依赖..."
 $pipExe = "$VENV_DIR\Scripts\pip.exe"
-$oldEAP = $ErrorActionPreference
-$ErrorActionPreference = "Continue"
 if (Test-Path "$INSTALL_DIR\requirements.txt") {
-    & $pipExe install -r "$INSTALL_DIR\requirements.txt" --quiet 2>&1 | Out-Null
+    cmd /c "`"$pipExe`" install -r `"$INSTALL_DIR\requirements.txt`" --quiet >nul 2>&1"
     if ($LASTEXITCODE -ne 0) {
-        Write-Warn "pip 安装依赖失败，正在重试..."
-        & $pythonCmd -m pip install -r "$INSTALL_DIR\requirements.txt" --quiet 2>&1 | Out-Null
+        Write-Warn "pip 失败，正在重试..."
+        & $pythonCmd -m pip install -r "$INSTALL_DIR\requirements.txt" --quiet
     }
 } else {
-    & $pipExe install requests rich --quiet 2>&1 | Out-Null
+    cmd /c "`"$pipExe`" install requests rich --quiet >nul 2>&1"
 }
-$ErrorActionPreference = $oldEAP
 Write-Step "依赖安装完成"
 
 # ── Create wrapper batch script ──────────────────────────────────────────────
