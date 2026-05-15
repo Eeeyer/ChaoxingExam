@@ -1,7 +1,7 @@
 # EEEYER Installer for Windows
 # =============================
 # Pipe install (PowerShell):
-#   irm https://raw.githubusercontent.com/Eeeyer/ChaoxingExam/main/install.ps1 | iex
+#   irm https://gitee.com/Eeeyer/ChaoxingExam/raw/main/install.ps1 | iex
 #
 # Or download and run:
 #   .\install.ps1
@@ -13,7 +13,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$REPO_ARCHIVE = "https://github.com/Eeeyer/ChaoxingExam/archive/refs/heads/$Branch.zip"
+$REPO_ARCHIVE = "https://gitee.com/Eeeyer/ChaoxingExam/repository/archive/$Branch.zip"
 $INSTALL_DIR = "$env:USERPROFILE\.eeeeyr"
 $VENV_DIR = "$INSTALL_DIR\venv"
 $EEEYER_BIN = "$INSTALL_DIR\er.bat"

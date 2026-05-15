@@ -1,6 +1,6 @@
 @echo off
 REM EEEYER Installer for Windows (CMD fallback)
-REM Usage: curl -fsSL https://raw.githubusercontent.com/Eeeyer/ChaoxingExam/main/install.bat -o install.bat && install.bat
+REM Usage: curl -fsSL https://gitee.com/Eeeyer/ChaoxingExam/raw/main/install.bat -o install.bat && install.bat
 
 echo.
 echo   EEEYER Installer (CMD)
@@ -23,13 +23,13 @@ echo   [i] Install directory: %INSTALL_DIR%
 if not exist "%INSTALL_DIR%" mkdir "%INSTALL_DIR%"
 
 echo   [i] Downloading EEEYER...
-powershell -Command "Invoke-WebRequest -Uri 'https://github.com/Eeeyer/ChaoxingExam/archive/refs/heads/main.zip' -OutFile '%TEMP%\eeeeyr.zip' -UseBasicParsing"
+powershell -Command "Invoke-WebRequest -Uri 'https://gitee.com/Eeeyer/ChaoxingExam/repository/archive/main.zip' -OutFile '%TEMP%\eeeeyr.zip' -UseBasicParsing"
 
 echo   [i] Extracting...
 powershell -Command "Expand-Archive -Path '%TEMP%\eeeeyr.zip' -DestinationPath '%TEMP%\eeeeyr-extract' -Force"
 
 echo   [i] Installing...
-robocopy "%TEMP%\eeeeyr-extract\ChaoxingExam-main" "%INSTALL_DIR%" /E /NFL /NDL /NJH /NJS /nc /ns /np >nul
+for /d %%d in ("%TEMP%\eeeeyr-extract\*") do robocopy "%%d" "%INSTALL_DIR%" /E /NFL /NDL /NJH /NJS /nc /ns /np >nul
 
 echo   [i] Setting up virtual environment...
 python -m venv "%INSTALL_DIR%\venv"
@@ -39,6 +39,7 @@ REM Create wrapper
 (
 echo @echo off
 echo chcp 65001 ^>nul 2^>^&1
+echo set PYTHONPATH=%INSTALL_DIR%;%%PYTHONPATH%%
 echo call "%INSTALL_DIR%\venv\Scripts\python.exe" -m eeeeyr %%*
 ) > "%INSTALL_DIR%\er.bat"
 
