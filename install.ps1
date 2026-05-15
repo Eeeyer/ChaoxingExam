@@ -1,4 +1,4 @@
-﻿# EEEYER Installer for Windows
+# EEEYER Installer for Windows
 # =============================
 # Pipe install (PowerShell):
 #   irm https://raw.githubusercontent.com/Eeeyer/ChaoxingExam/main/install.ps1 | iex
