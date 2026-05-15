@@ -118,12 +118,17 @@ if ($DevMode) {
     $extractDir = "$env:TEMP\eeeeyr-extract"
 
     Write-Info "正在下载 EEEYER..."
-
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
     try {
-        (New-Object System.Net.WebClient).DownloadFile($REPO_ARCHIVE, $zipFile)
+        Invoke-WebRequest -Uri $REPO_ARCHIVE -OutFile $zipFile -MaximumRedirection 10 -UseBasicParsing
     } catch {
         Write-Host "  [X] 下载失败，请检查网络连接后重试。" -ForegroundColor Red
+        exit 1
+    }
+
+    if (-not (Test-Path $zipFile) -or (Get-Item $zipFile).Length -lt 1000) {
+        Write-Host "  [X] 下载文件无效，请重试。" -ForegroundColor Red
         exit 1
     }
     Write-Step "下载完成"
@@ -131,7 +136,13 @@ if ($DevMode) {
     if (Test-Path $extractDir) {
         Remove-Item -Recurse -Force $extractDir
     }
-    Expand-Archive -Path $zipFile -DestinationPath $extractDir -Force
+
+    try {
+        Expand-Archive -Path $zipFile -DestinationPath $extractDir -Force
+    } catch {
+        Write-Host "  [X] 解压失败: $_" -ForegroundColor Red
+        exit 1
+    }
     Write-Step "解压完成"
 
     $srcDir = Get-ChildItem -Path $extractDir -Directory | Select-Object -First 1
