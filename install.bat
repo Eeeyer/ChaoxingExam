@@ -1,6 +1,6 @@
 @echo off
 REM EEEYER Installer for Windows (CMD fallback)
-REM Usage: curl -fsSL https://gitee.com/Eeeyer/ChaoxingExam/raw/main/install.bat -o install.bat && install.bat
+REM Usage: curl -fsSL https://gitee.com/Eeeyer/Chaoxing-exam/raw/main/install.bat -o install.bat && install.bat
 
 echo.
 echo   EEEYER Installer (CMD)
@@ -23,7 +23,7 @@ echo   [i] Install directory: %INSTALL_DIR%
 if not exist "%INSTALL_DIR%" mkdir "%INSTALL_DIR%"
 
 echo   [i] Downloading EEEYER...
-powershell -Command "Invoke-WebRequest -Uri 'https://gitee.com/Eeeyer/ChaoxingExam/repository/archive/main.zip' -OutFile '%TEMP%\eeeeyr.zip' -UseBasicParsing"
+powershell -Command "Invoke-WebRequest -Uri 'https://gitee.com/Eeeyer/Chaoxing-exam/repository/archive/main.zip' -OutFile '%TEMP%\eeeeyr.zip' -UseBasicParsing"
 
 echo   [i] Extracting...
 powershell -Command "Expand-Archive -Path '%TEMP%\eeeeyr.zip' -DestinationPath '%TEMP%\eeeeyr-extract' -Force"
