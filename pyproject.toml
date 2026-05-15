@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "eeeeyr"
+version = "1.0.0"
+description = "超星考试辅助终端工具"
+requires-python = ">=3.8"
+dependencies = [
+    "requests>=2.28",
+    "rich>=13.0",
+]
+
+[project.scripts]
+eeeeyr = "eeeeyr.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
