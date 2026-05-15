@@ -61,11 +61,9 @@ function Write-Warn {
 # ── Check prerequisites ────────────────────────────────────────────────────────
 
 Write-Host ""
-Write-Host "  EEEYER Installer" -NoNewline -ForegroundColor Yellow
-Write-Host "            ╭─────────────────────────────────────────╮" -ForegroundColor DarkYellow
-Write-Host "  ================" -NoNewline -ForegroundColor DarkYellow
-Write-Host "            │    超星考试辅助工具 · Exam Helper       │" -ForegroundColor Yellow
-Write-Host "            ╰─────────────────────────────────────────╯" -ForegroundColor DarkYellow
+Write-Host "  EEEYER Installer" -ForegroundColor Yellow
+Write-Host "  ================" -ForegroundColor DarkYellow
+Write-Host "  超星考试辅助工具 · Exam Helper" -ForegroundColor Gray
 Write-Host ""
 
 $pythonCmd = $null
@@ -162,11 +160,13 @@ if (Test-Path "$INSTALL_DIR\requirements.txt") {
 Write-Step "依赖安装完成"
 
 Write-Info "正在安装 EEEYER..."
-cmd /c "`"$pipExe`" install -e `"$INSTALL_DIR`" --quiet >nul 2>&1"
+$oldEAP = $ErrorActionPreference
+$ErrorActionPreference = "Continue"
+& $VENV_DIR\Scripts\pip.exe install -e "$INSTALL_DIR" --quiet 2>&1 | Out-Null
 if ($LASTEXITCODE -ne 0) {
-    Write-Warn "安装 EEEYER 失败，正在重试..."
-    & $pythonCmd -m pip install -e "$INSTALL_DIR" --quiet 2>&1 | Out-Null
+    Write-Warn "pip install -e 失败，换用 PYTHONPATH 方式"
 }
+$ErrorActionPreference = $oldEAP
 Write-Step "EEEYER 安装完成"
 
 # ── Create wrapper ──────────────────────────────────────────────────────────
@@ -174,6 +174,7 @@ Write-Step "EEEYER 安装完成"
 $wrapperContent = @"
 @echo off
 chcp 65001 >nul 2>&1
+set PYTHONPATH=$INSTALL_DIR;%PYTHONPATH%
 call "$VENV_DIR\Scripts\python.exe" -m eeeeyr %*
 "@
 
